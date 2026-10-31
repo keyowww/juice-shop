@@ -17,17 +17,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Snyk SCA Scan
-        uses: snyk/actions/node@master
+      - name: Run Snyk SCA Scan
+        run: npx snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
 
-      - name: Snyk Monitor
+      - name: Run Snyk Monitor
         run: npx snyk monitor
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
