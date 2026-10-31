@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install Dependencies
+        run: npm install --package-lock-only || true
+
       - name: Snyk SCA Scan
         uses: snyk/actions/node@master
         env:
