@@ -17,13 +17,21 @@ jobs:
         with:
           node-version: 18
 
-      - name: Run Snyk SCA Scan
-        run: npx snyk test --severity-threshold=high
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Generate Lockfile
+        run: npm i --package-lock-only || true
 
-      - name: Run Snyk Monitor
-        run: npx snyk monitor
+      - name: Snyk SCA Scan (Docker Container)
+        uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+          args: --severity-threshold=high --command=install
+
+      - name: Snyk Monitor
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
         if: github.ref == 'refs/heads/master'
